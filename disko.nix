@@ -1,8 +1,8 @@
-{
+{ disks ? [/dev/nvme0n1], ... }: {
   disko.devices = {
     disk = {
       my-disk = {
-        device = "/dev/nvme0n1";
+        device = builtins.elemAt disks 0;
         type = "disk";
         content = {
           type = "gpt";
@@ -17,41 +17,32 @@
               };
             };
 
-            swap = {
-              size = "24G";
-              content = {
-                type = "swap";
-                resumeDevice = true;
-              };
-            };
-
             root = {
               size = "100%";
               content = {
-                type = "filesystem";
-                format = "btfrs";
+                type = "btrfs";
 
-                extraArgs = [ "-f" ];
+                extraArgs = [ "-L" "nixos" "-f" ];
                 subvolumes = {
                   "@" = {
                     mountpoint = "/";
-                    mountOptions = defaultBtrfsOpts;
+                    mountOptions = [ "subvol=root" "compress=zstd" "noatime" ];
                   };
                   "@nix" = {
                     mountpoint = "/nix";
-                    mountOptions = defaultBtrfsOpts;
+                    mountOptions = [ "subvol=nix" "compress=zstd" "noatime" ];
                   };
                   "@home" = {
                     mountpoint = "/home";
-                    mountOptions = defaultBtrfsOpts;
-                  };
-                  "@var" = {
-                    mountpoint = "/var";
-                    mountOptions = defaultBtrfsOpts;
+                    mountOptions = [ "subvol=home" "compress=zstd" "noatime" ];
                   };
                   "@snapshots" = {
                     mountpoint = "/.snapshots";
-                    mountOptions = defaultBtrfsOpts;
+                    mountOptions = [ "subvolume=.snapshots" "compress=zstd" "noatime" ];
+                  };
+                  "@swap" = {
+                    mountpoint = "/swap";
+                    swap.swapfile.size = "24G";
                   };
                 };
               };

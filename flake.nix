@@ -36,8 +36,13 @@
           config.allowUnfree = true;
         };
         inherit inputs system hostname username fullname;
-      };
+      };     
       modules = [
+        disko.nixosModules.disko
+        ./disko.nix
+        {
+          _module.args.disks = [ "/dev/vda" ];
+        }
         ./nixos/configuration.nix
         inputs.nixvim.nixosModules.nixvim
       ];
