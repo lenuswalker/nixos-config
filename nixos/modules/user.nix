@@ -6,12 +6,12 @@
 
     users.${username} = {
       isNormalUser = true;
-      description = ${fullname};
+      description = "${fullname}";
       extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];
       packages = with pkgs; [];
     };
   };
 
   # Enable automatic login for the user.
-  # services.getty.autologinUser = ${username};
+  # services.getty.autologinUser = "${username}";
 }

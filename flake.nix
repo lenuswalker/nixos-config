@@ -44,7 +44,6 @@
     };
 
     homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-      inherit hostname username fullname;
       pkgs = nixpkgs.legacyPackages.${system};
       modules = [ ./home-manager/home.nix ];
     };
