@@ -1,17 +1,17 @@
-{ pkgs, ... }: {
+{ pkgs, username, fullname, ... }: {
   programs.zsh.enable = true;
 
   users = {
     defaultUserShell = pkgs.zsh;
 
-    users.amper = {
+    users.${username} = {
       isNormalUser = true;
-      description = "Ampersand";
+      description = ${fullname};
       extraGroups = [ "networkmanager" "wheel" "input" "libvirtd" ];
       packages = with pkgs; [];
     };
   };
 
   # Enable automatic login for the user.
-  services.getty.autologinUser = "amper";
+  # services.getty.autologinUser = ${username};
 }

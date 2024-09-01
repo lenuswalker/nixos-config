@@ -1,4 +1,4 @@
-{ inputs, ...}: {
+{ inputs, hostname, username, fullname, ...}: {
   imports = [
     ./hardware-configuration.nix
     ./packages.nix
@@ -11,9 +11,9 @@
 
   nixpkgs.overlays = [ inputs.polymc.overlay ];
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = ${hostname}; # Define your hostname.
 
-  time.timeZone = "Asia/Tashkent"; # Set your time zone.
+  time.timeZone = "America/Grenada"; # Set your time zone.
 
   i18n.defaultLocale = "en_US.UTF-8"; # Select internationalisation properties.
 

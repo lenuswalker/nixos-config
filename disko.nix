@@ -2,14 +2,14 @@
   disko.devices = {
     disk = {
       my-disk = {
-        device = "/dev/sdb";
+        device = "/dev/nvme0n1";
         type = "disk";
         content = {
           type = "gpt";
           partitions = {
             ESP = {
               type = "EF00";
-              size = "256M";
+              size = "512M";
               content = {
                type = "filesystem";
                 format = "vfat";
@@ -18,7 +18,7 @@
             };
 
             swap = {
-              size = "8G";
+              size = "24G";
               content = {
                 type = "swap";
                 resumeDevice = true;
@@ -29,8 +29,31 @@
               size = "100%";
               content = {
                 type = "filesystem";
-                format = "ext4";
-                mountpoint = "/";
+                format = "btfrs";
+
+                extraArgs = [ "-f" ];
+                subvolumes = {
+                  "@" = {
+                    mountpoint = "/";
+                    mountOptions = defaultBtrfsOpts;
+                  };
+                  "@nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = defaultBtrfsOpts;
+                  };
+                  "@home" = {
+                    mountpoint = "/home";
+                    mountOptions = defaultBtrfsOpts;
+                  };
+                  "@var" = {
+                    mountpoint = "/var";
+                    mountOptions = defaultBtrfsOpts;
+                  };
+                  "@snapshots" = {
+                    mountpoint = "/.snapshots";
+                    mountOptions = defaultBtrfsOpts;
+                  };
+                };
               };
             };
           };

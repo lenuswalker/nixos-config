@@ -4,7 +4,7 @@
   inputs = {
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -23,16 +23,19 @@
 
     let
       system = "x86_64-linux";
+      hostname = "izzy-nixos";
+      username = "lenus";
+      fullname = "Lenus Walker";
     in {
 
     # nixos - system hostname
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.${hostname} = nixpkgs.lib.nixosSystem {
       specialArgs = {
         pkgs-stable = import nixpkgs-stable {
           inherit system;
           config.allowUnfree = true;
         };
-        inherit inputs system;
+        inherit inputs system hostname username fullname;
       };
       modules = [
         ./nixos/configuration.nix
@@ -40,7 +43,8 @@
       ];
     };
 
-    homeConfigurations.amper = home-manager.lib.homeManagerConfiguration {
+    homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
+      inherit hostname username fullname;
       pkgs = nixpkgs.legacyPackages.${system};
       modules = [ ./home-manager/home.nix ];
     };
